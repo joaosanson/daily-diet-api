@@ -6,7 +6,7 @@ export async function usersRoutes(app: FastifyInstance) {
     const user = await knex('users').select()
 
     if (user.length === 0) {
-      throw new Error('User not found.')
+      throw new Error('User not found!')
     }
 
     reply.send(user)
