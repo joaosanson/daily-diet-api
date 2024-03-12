@@ -12,6 +12,7 @@ app.register(usersRoutes, {
 app.register(mealsRoutes, {
   prefix: 'meals',
 })
+
 app.register(sessionRoutes, {
   prefix: 'session',
 })
