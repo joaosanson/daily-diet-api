@@ -1,13 +1,13 @@
 import { verify } from 'jsonwebtoken'
-import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import { auth } from '../config/auth'
+import { CustomFastifyRequest } from '../@types/fastify'
 
 const jwtPayloadSchema = z.object({
   sub: z.string().uuid(),
 })
 
-export async function ensureAuth(request: FastifyRequest) {
+export async function ensureAuth(request: CustomFastifyRequest) {
   const authHeader = request.headers.authorization
 
   if (!authHeader) {
