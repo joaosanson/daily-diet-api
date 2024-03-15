@@ -14,6 +14,10 @@ export async function usersRoutes(app: FastifyInstance) {
     reply.send(user)
   })
 
+  app.get('/metrics', async (request, reply) => {
+    reply.status(201).send({ message: 'Test' })
+  })
+
   app.post('/', async (request, reply) => {
     const createUsersBodySchema = z.object({
       name: z.string(),
