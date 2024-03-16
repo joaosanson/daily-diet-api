@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify'
 import { knex } from '../database'
 import { z } from 'zod'
+import crypto from 'node:crypto'
 import { hash } from 'bcrypt'
 
 export async function usersRoutes(app: FastifyInstance) {

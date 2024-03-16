@@ -14,7 +14,7 @@ export async function ensureAuth(request: CustomFastifyRequest) {
     throw Error('JWT Token not informed.')
   }
 
-  const token = authHeader.split(' ')[1]
+  const token = authHeader.split(' ')['1']
 
   try {
     const { sub: userId } = jwtPayloadSchema.parse(
