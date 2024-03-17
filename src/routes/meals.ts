@@ -20,6 +20,28 @@ export async function mealsRoutes(app: FastifyInstance) {
     reply.send(meals)
   })
 
+  app.get('/:id', async (request: CustomFastifyRequest, reply) => {
+    const getUserSchema = z.object({
+      id: z.string().uuid(),
+    })
+
+    const getQueryParams = z.object({
+      id: z.string().uuid(),
+    })
+
+    const { id: userId } = getUserSchema.parse(request.user)
+
+    const { id } = getQueryParams.parse(request.params)
+
+    const meal = await knex('meals').select().where({ user_id: userId, id })
+
+    if (meal.length === 0) {
+      throw Error('Note not found.')
+    }
+
+    reply.send(meal)
+  })
+
   app.post('/', async (request: CustomFastifyRequest, reply) => {
     const getMealsSchema = z.object({
       name: z.string(),
