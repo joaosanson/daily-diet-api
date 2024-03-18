@@ -35,6 +35,7 @@ export const errorHandler = (
         reply.status(error.statusCode).send(error)
         break
 
+      case 'All of the fields must be defined.':
       case 'One of the fields must be defined.':
       case 'Filename not provided.':
       case 'Meals not found.':

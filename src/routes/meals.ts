@@ -82,6 +82,46 @@ export async function mealsRoutes(app: FastifyInstance) {
     })
   })
 
+  app.put('/:id', async (request: CustomFastifyRequest, reply) => {
+    const getUserSchema = z.object({
+      id: z.string().uuid(),
+    })
+
+    const { id: userId } = getUserSchema.parse(request.user)
+
+    const getMealParam = z.object({
+      id: z.string().uuid(),
+    })
+
+    const { id } = getMealParam.parse(request.params)
+
+    const getMealsSchema = z.object({
+      name: z.string(),
+      description: z.string(),
+      dateTime: z.string().datetime(),
+      isOnDiet: z.boolean(),
+    })
+
+    const { name, description, dateTime, isOnDiet } = getMealsSchema.parse(
+      request.body,
+    )
+
+    if (!(name || description || dateTime || isOnDiet)) {
+      throw Error('All of the fields must be defined.')
+    }
+
+    await knex('meals')
+      .update({
+        name,
+        description,
+        date: dateTime,
+        isOnDiet,
+      })
+      .where({ id, user_id: userId })
+
+    reply.status(201).send()
+  })
+
   app.post('/', async (request: CustomFastifyRequest, reply) => {
     const getMealsSchema = z.object({
       name: z.string(),
