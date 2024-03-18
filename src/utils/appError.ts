@@ -37,8 +37,7 @@ export const errorHandler = (
 
       case 'One of the fields must be defined.':
       case 'Filename not provided.':
-      case 'Tag not found.':
-      case 'Note not found.':
+      case 'Meals not found.':
       case 'User not found.':
         error.statusCode = 404
         reply.status(error.statusCode).send(error)
