@@ -43,9 +43,35 @@ export async function mealsRoutes(app: FastifyInstance) {
   })
 
   app.get('/metrics', async (request: CustomFastifyRequest, reply) => {
+    interface MealsSchema {
+      id: string
+      user_id: string
+      name: string
+      description: string
+      date: string
+      isOnDiet: boolean
+    }
+
     const getUserSchema = z.object({
       id: z.string().uuid(),
     })
+
+    function findLongestMealSequence(meals: MealsSchema[]) {
+      let longestSequence = 0
+      let currentSequence = 0
+
+      for (let i = 0; i < meals.length; i++) {
+        if (meals[i].isOnDiet) {
+          currentSequence++
+
+          longestSequence = Math.max(longestSequence, currentSequence)
+        } else {
+          currentSequence = 0
+        }
+      }
+
+      return longestSequence
+    }
 
     const { id: userId } = getUserSchema.parse(request.user)
 
@@ -75,10 +101,13 @@ export async function mealsRoutes(app: FastifyInstance) {
       }
     }
 
+    const longestSequence = findLongestMealSequence(sortedMeals)
+
     reply.send({
       total: mealsQuantity,
       onDiet: mealsQuantityOnDiet,
       notOnDiet: mealsQuantityNotOnDiet,
+      longestSequence,
     })
   })
 
