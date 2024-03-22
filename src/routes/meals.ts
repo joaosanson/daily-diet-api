@@ -179,7 +179,7 @@ export async function mealsRoutes(app: FastifyInstance) {
       date: dateTime,
       isOnDiet,
     })
-    reply.send()
+    reply.send(204)
   })
 
   app.delete('/:id', async (request: CustomFastifyRequest, reply) => {
