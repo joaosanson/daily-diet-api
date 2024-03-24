@@ -63,18 +63,15 @@ export async function mealsRoutes(app: FastifyInstance) {
       for (let i = 0; i < meals.length; i++) {
         if (meals[i].isOnDiet) {
           currentSequence++
-
           longestSequence = Math.max(longestSequence, currentSequence)
         } else {
           currentSequence = 0
         }
       }
-
       return longestSequence
     }
 
     const { id: userId } = getUserSchema.parse(request.user)
-
     const meals = await knex('meals').select().where({ user_id: userId })
 
     if (meals.length === 0) {

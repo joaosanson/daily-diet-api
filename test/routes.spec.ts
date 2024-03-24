@@ -89,4 +89,182 @@ describe('Meals routes', () => {
       })
       .expect(204)
   })
+
+  it('should be able to list all the meals', async () => {
+    await request(app.server).post('/users').send({
+      name: 'john',
+      email: 'johndoe@email.com',
+      password: 'john123',
+    })
+
+    const session = await request(app.server)
+      .post('/sessions')
+      .send({ email: 'johndoe@email.com', password: 'john123' })
+
+    const userDataResponse: UserSchema = JSON.parse(session.text)
+
+    const { token } = userDataResponse
+
+    await request(app.server)
+      .post('/meals')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        name: 'Cachorro Quente',
+        description: 'Cachorro quente com batatas fritas e molho barbecue',
+        dateTime: '2022-01-10T00:00:00.000Z',
+        isOnDiet: true,
+      })
+
+    await request(app.server)
+      .get('/meals')
+      .set('Authorization', `bearer ${token}`)
+      .expect(200)
+  })
+
+  it('should be able to show one meal', async () => {
+    await request(app.server).post('/users').send({
+      name: 'john',
+      email: 'johndoe@email.com',
+      password: 'john123',
+    })
+    const session = await request(app.server)
+      .post('/sessions')
+      .send({ email: 'johndoe@email.com', password: 'john123' })
+
+    const userDataResponse: UserSchema = JSON.parse(session.text)
+
+    const { token } = userDataResponse
+
+    await request(app.server)
+      .post('/meals')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        name: 'Cachorro Quente',
+        description: 'Cachorro quente com batatas fritas e molho barbecue',
+        dateTime: '2022-01-10T00:00:00.000Z',
+        isOnDiet: true,
+      })
+
+    const mealData = await request(app.server)
+      .get('/meals')
+      .set('Authorization', `bearer ${token}`)
+
+    const mealsResponse = mealData.text
+    const [meal] = JSON.parse(mealsResponse)
+    await request(app.server)
+      .get(`/meals/${meal.id}`)
+      .set('Authorization', `bearer ${token}`)
+      .expect(200)
+  })
+
+  it('should be able to show meals metrics', async () => {
+    await request(app.server).post('/users').send({
+      name: 'john',
+      email: 'johndoe@email.com',
+      password: 'john123',
+    })
+
+    const session = await request(app.server)
+      .post('/sessions')
+      .send({ email: 'johndoe@email.com', password: 'john123' })
+
+    const userDataResponse: UserSchema = JSON.parse(session.text)
+
+    const { token } = userDataResponse
+
+    await request(app.server)
+      .post('/meals')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        name: 'Cachorro Quente',
+        description: 'Cachorro quente com batatas fritas e molho barbecue',
+        dateTime: '2022-01-10T00:00:00.000Z',
+        isOnDiet: true,
+      })
+
+    await request(app.server)
+      .get(`/meals/metrics`)
+      .set('Authorization', `bearer ${token}`)
+      .expect(200)
+  })
+
+  it('should be able to edit a meal', async () => {
+    await request(app.server).post('/users').send({
+      name: 'john',
+      email: 'johndoe@email.com',
+      password: 'john123',
+    })
+
+    const session = await request(app.server)
+      .post('/sessions')
+      .send({ email: 'johndoe@email.com', password: 'john123' })
+
+    const userDataResponse: UserSchema = JSON.parse(session.text)
+
+    const { token } = userDataResponse
+
+    await request(app.server)
+      .post('/meals')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        name: 'Cachorro Quente',
+        description: 'Cachorro quente com batatas fritas e molho barbecue',
+        dateTime: '2022-01-10T00:00:00.000Z',
+        isOnDiet: true,
+      })
+
+    const mealData = await request(app.server)
+      .get('/meals')
+      .set('Authorization', `bearer ${token}`)
+
+    const mealsResponse = mealData.text
+    const [meal] = JSON.parse(mealsResponse)
+    await request(app.server)
+      .put(`/meals/${meal.id}`)
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        name: 'Cachorro Fio',
+        description: 'Teste',
+        dateTime: '2024-01-10T00:00:00.000Z',
+        isOnDiet: false,
+      })
+      .expect(201)
+  })
+
+  it('should be able to delete meals', async () => {
+    await request(app.server).post('/users').send({
+      name: 'john',
+      email: 'johndoe@email.com',
+      password: 'john123',
+    })
+
+    const session = await request(app.server)
+      .post('/sessions')
+      .send({ email: 'johndoe@email.com', password: 'john123' })
+
+    const userDataResponse: UserSchema = JSON.parse(session.text)
+
+    const { token } = userDataResponse
+
+    await request(app.server)
+      .post('/meals')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        name: 'Cachorro Quente',
+        description: 'Cachorro quente com batatas fritas e molho barbecue',
+        dateTime: '2022-01-10T00:00:00.000Z',
+        isOnDiet: true,
+      })
+
+    const mealData = await request(app.server)
+      .get('/meals')
+      .set('Authorization', `bearer ${token}`)
+
+    const mealsResponse = mealData.text
+    const [meal] = JSON.parse(mealsResponse)
+    await request(app.server)
+      .delete(`/meals/${meal.id}`)
+      .set('Authorization', `bearer ${token}`)
+      .expect(204)
+  })
 })
